@@ -36,9 +36,7 @@ export default class Character extends Component {
 									className='list-group-item'>
 									{data.status}
 								</li>
-								<li
-									key={`${data.id}-${data.status}`}
-									className='list-group-item'>
+								<li className='list-group-item'>
 									<button
 										type='button'
 										class='btn btn-link'
