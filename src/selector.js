@@ -16,9 +16,14 @@ export const getResults = createSelector([getData], (data) => {
 export const getInfo = createSelector([getData], (data) => {
 	return data.info;
 });
+
+export const getSelectedCharacter = createSelector([getData], (data) => {
+	return data.selectedCharacter;
+});
 const selectors = {
 	getLoaded,
 	getResults,
 	getInfo,
+	getSelectedCharacter,
 };
 export default selectors;

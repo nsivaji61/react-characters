@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 export default class Character extends Component {
 	static propTypes = {
 		data: PropTypes.object,
+		onEpisodesClick: PropTypes.func,
 	};
-
+	constructor(props) {
+		super(props);
+		this.state = { children: '' };
+	}
 	render() {
-		const { data } = this.props;
+		const { data, onEpisodesClick } = this.props;
 		return (
 			<React.Fragment>
 				<div className='card'>
@@ -32,6 +35,16 @@ export default class Character extends Component {
 									key={`${data.id}-${data.status}`}
 									className='list-group-item'>
 									{data.status}
+								</li>
+								<li
+									key={`${data.id}-${data.status}`}
+									className='list-group-item'>
+									<button
+										type='button'
+										class='btn btn-link'
+										onClick={() => onEpisodesClick(data.id)}>
+										Episodes
+									</button>
 								</li>
 							</ul>
 						</div>

@@ -8,19 +8,26 @@ import { connect } from 'react-redux';
 import Character from './Character';
 import AddCharacterModal from './AddCharacterModal';
 import Header from './Header';
+import Modal from './Modal';
 
 import selectors from './selector';
+import Episodes from './Episodes';
 
 export class CharactersContainer extends PureComponent {
 	static propTypes = {
 		actions: PropTypes.object.isRequired,
 		loaded: PropTypes.bool,
 		data: PropTypes.array,
+		selectedCharacter: PropTypes.object,
 	};
 	constructor(props) {
 		super(props);
 		this.actions = this.props.actions;
-		this.state = { displayModal: false, pageIndex: 1 };
+		this.state = {
+			displayModal: false,
+			pageIndex: 1,
+			displayEpisodesModal: false,
+		};
 	}
 
 	componentDidMount() {
@@ -41,7 +48,13 @@ export class CharactersContainer extends PureComponent {
 		this.actions.loadCharacters({ index: pageIndex - 1 });
 		this.setState({ pageIndex: pageIndex - 1 });
 	};
-
+	onEpisodesModal = (id) => {
+		this.actions.findCharacter(id);
+		this.setState({ displayEpisodesModal: true });
+	};
+	onEpisodesModalClose = () => {
+		this.setState({ displayEpisodesModal: false });
+	};
 	onModalClose = () => {
 		this.setState({ displayModal: false });
 	};
@@ -57,7 +70,11 @@ export class CharactersContainer extends PureComponent {
 		return (
 			<React.Fragment>
 				<div className='col-sm-3 card-bottom'>
-					<Character Key={data.id} data={data} />
+					<Character
+						Key={data.id}
+						data={data}
+						onEpisodesClick={this.onEpisodesModal}
+					/>
 				</div>
 			</React.Fragment>
 		);
@@ -92,6 +109,23 @@ export class CharactersContainer extends PureComponent {
 			);
 		}
 	}
+	renderEpisode = () => {
+		const { selectedCharacter } = this.props;
+		return selectedCharacter ? (
+			<Episodes data={selectedCharacter.episode} />
+		) : null;
+	};
+	renderEpisodesModal = () => {
+		const { displayEpisodesModal } = this.state;
+		return (
+			<Modal
+				heading={'Episodes'}
+				children={this.renderEpisode()}
+				show={displayEpisodesModal}
+				onClose={this.onEpisodesModalClose}
+			/>
+		);
+	};
 	renderModal() {
 		const { displayModal } = this.state;
 		return (
@@ -109,6 +143,7 @@ export class CharactersContainer extends PureComponent {
 			<React.Fragment>
 				{this.renderCharactersContainer()}
 				{this.renderModal()}
+				{this.renderEpisodesModal()}
 			</React.Fragment>
 		) : null;
 	}
@@ -118,6 +153,7 @@ const mapStateToProps = (state) => ({
 	loaded: selectors.getLoaded(state),
 	data: selectors.getResults(state),
 	info: selectors.getInfo(state),
+	selectedCharacter: selectors.getSelectedCharacter(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
