@@ -5,13 +5,13 @@ import reducer from './reducer';
 import saga from './saga';
 
 const configureStore = () => {
-  const sagaMiddleware = createSagaMiddleware();
-  const middlewareEnhancer = applyMiddleware(sagaMiddleware);
-  const enhancers = [middlewareEnhancer];
-  const composedEnhancers = composeWithDevTools(...enhancers);
-  const store = createStore(reducer, composedEnhancers);
+	const sagaMiddleware = createSagaMiddleware();
+	const middlewareEnhancer = applyMiddleware(sagaMiddleware);
+	const enhancers = [middlewareEnhancer];
+	const composedEnhancers = composeWithDevTools(...enhancers);
 
-  sagaMiddleware.run(saga);
+	const store = createStore(reducer, composedEnhancers);
+	sagaMiddleware.run(saga);
 
   return store;
 };
